@@ -44,6 +44,10 @@ func ValidatePassword(hashedPassword string, password string) bool {
 }
 
 func AuthMiddleware(c *fiber.Ctx) error {
+	/*
+		Prevents the logged user to access the login and register pages
+		and prevents the no logged user to access protected pages
+	*/
 	sess, err := Session.Get(c)
 	if err != nil {
 		log.Println(err)

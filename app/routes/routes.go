@@ -9,9 +9,9 @@ import (
 )
 
 func Index(c *fiber.Ctx) error {
-	return c.Render("layouts/main", fiber.Map{
+	return c.Render("hello", fiber.Map{
 		"Title": os.Getenv("TITLE"),
-	}, "hello")
+	}, "layouts/main")
 
 }
 
@@ -22,7 +22,7 @@ func LoginPost(c *fiber.Ctx) error {
 		return c.SendString("Wrong email")
 	}
 
-	user := database.SearchUser(email, "email")
+	user := database.SearchUserByString(email, "email")
 
 	if middleware.ValidatePassword(user.Password, c.FormValue("password")) {
 		middleware.SetSessionCookie(c, user.ID)

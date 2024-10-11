@@ -13,9 +13,12 @@ import (
 )
 
 func main() {
+
+	// Initializing and connecting to the databases
 	database.ConnectDatabase()
 	middleware.ConnectSessionsDB()
 
+	// Loading the global variables
 	err := godotenv.Load("./config/.env")
 	if err != nil {
 		log.Fatalln(err)
@@ -26,8 +29,11 @@ func main() {
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
+
+	// Here is where you want to put your icons, scripts, thumbnails etc
 	app.Static("/", "./app/public")
 
+	// Routes:
 	app.Get("/", routes.Index)
 
 	app.Get("/login", middleware.AuthMiddleware, routes.LoginGet)

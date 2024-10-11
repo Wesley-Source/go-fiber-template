@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Models:
 type User struct {
 	gorm.Model
 	Username string `gorm:"unique" json:"username"`
@@ -21,9 +22,9 @@ func ConnectDatabase() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	db.AutoMigrate(&User{}) // Include all the models
+	db.AutoMigrate(&User{}) // Include models as you create them
 
-	Database = db
+	Database = db // Moving the variable to the global scope
 }
 
 func UserExists(value, condition string) bool {
@@ -33,10 +34,12 @@ func UserExists(value, condition string) bool {
 	conditionString := condition + " = ?"
 	result := Database.Where(conditionString, value).First(&user)
 
-	return result.Error != gorm.ErrRecordNotFound
+	return result.Error != gorm.ErrRecordNotFound // Returns true if finds a user, false if don't
 }
 
-func SearchUser(value, condition string) User {
+func SearchUserByString(value, condition string) User {
+	// Search user by any string type value
+
 	var user User
 
 	conditionString := condition + " = ?"

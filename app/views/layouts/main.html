@@ -5,33 +5,7 @@
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
   <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>{{.Title}}</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="" />
-    <script>
-      window.__unocss = {
-        rules: [
-          // custom rules...
-        ],
-        presets: [
-          // custom presets...
-        ],
-        // ...
-      };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/@unocss/runtime"></script>
-    <script
-      src="https://unpkg.com/htmx.org@2.0.3/dist/htmx.js"
-      integrity="sha384-BBDmZzVt6vjz5YbQqZPtFZW82o8QotoM7RUp5xOxV3nSJ8u2pSdtzFAbGKzTlKtg"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
-    ></script>
+    {{template "partials/head" .}}
   </head>
   <body>
     {{embed}}
