@@ -1,13 +1,12 @@
-
 # Fullstack Go Template
 
-A very simple web app template made for fast and easy development while using as little JavaScript as possible.
+A very simple web app template made to make the developer's life easy while avoiding JavaScript as much as possible.
+
 ## Tools Included
 
 - **Go Fiber**: Web framework for Go
-- **GORM**: Biblioteca de mapeamento objeto-relacional para Go
-- **HTMX**: Biblioteca de frontend para criar interfaces de usuário dinâmicas
-- **AlpineJS**: Biblioteca de JavaScript para criar interfaces de usuário dinâmicas
-- **GoDotEnv**: Biblioteca para carregar variáveis de ambiente de um arquivo .env
-- **UnoCSS**: Biblioteca de CSS para criar estilos de interface de usuário
-
+- **GORM**: Object-relational mapping library for Go
+- **HTMX**: Frontend library for creating dynamic user interfaces
+- **AlpineJS**: JavaScript library for creating dynamic user interfaces
+- **GoDotEnv**: Library for loading environment variables from a .env file
+- **UnoCSS**: CSS library for creating user interface styles
