@@ -17,11 +17,36 @@ type User struct {
 var Database *gorm.DB
 
 func ConnectDatabase() {
-	db, err := gorm.Open(sqlite.Open("./config/database/db.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("./config/database/models.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(err)
 	}
 	db.AutoMigrate(&User{}) // Include all the models
 
 	Database = db
+}
+
+func UserExists(value, condition string) bool {
+	var user User
+
+	// Checks if user exists by email
+	conditionString := condition + " = ?"
+	result := Database.Where(conditionString, value).First(&user)
+
+	return result.Error != gorm.ErrRecordNotFound
+}
+
+func SearchUser(value, condition string) User {
+	var user User
+
+	conditionString := condition + " = ?"
+	Database.Where(conditionString, value).First(&user)
+	return user
+}
+
+func SearchUserById(id uint) User {
+	var user User
+
+	Database.Where("id = ?", id).First(&user)
+	return user
 }
