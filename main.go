@@ -1,7 +1,6 @@
 package main
 
 import (
-	"go-fiber-template/app/middleware"
 	"go-fiber-template/app/routes"
 	"go-fiber-template/config/database"
 	"log"
@@ -18,7 +17,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	engine := html.New("./views", ".html")
+	engine := html.New("./app/views", ".html")
 
 	app := fiber.New(fiber.Config{
 		Views: engine,
@@ -27,7 +26,7 @@ func main() {
 
 	database.ConnectDatabase()
 
-	app.Get("/", middleware.AuthMiddleware, routes.Index)
+	app.Get("/", routes.Index)
 
 	log.Fatalln(app.Listen(os.Getenv("PORT")))
 }

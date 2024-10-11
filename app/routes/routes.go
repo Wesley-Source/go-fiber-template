@@ -9,6 +9,6 @@ import (
 func Index(c *fiber.Ctx) error {
 	return c.Render("layouts/main", fiber.Map{
 		"Title": os.Getenv("TITLE"),
-	})
+	}, "hello")
 
 }
