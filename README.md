@@ -9,4 +9,4 @@ A very simple web app template made to make the developer's life easy while avoi
 - **HTMX**: Frontend library for creating dynamic user interfaces
 - **AlpineJS**: JavaScript library for creating dynamic user interfaces
 - **GoDotEnv**: Library for loading environment variables from a .env file
-- **UnoCSS**: CSS library for creating user interface styles
+- **Bulma**: CSS library for creating user interface styles

@@ -26,12 +26,13 @@ func LoginPost(c *fiber.Ctx) error {
 
 	if middleware.ValidatePassword(user.Password, c.FormValue("password")) {
 		middleware.SetSessionCookie(c, user.ID)
+
 		c.Set("HX-Redirect", "/")
 		return c.SendStatus(fiber.StatusOK)
+
 	} else {
 		return c.SendString("Wrong password")
 	}
-
 }
 
 func LoginGet(c *fiber.Ctx) error {
@@ -43,11 +44,13 @@ func LoginGet(c *fiber.Ctx) error {
 func RegisterPost(c *fiber.Ctx) error {
 	email := c.FormValue("email")
 	if !database.UserExists(email, "email") {
+
 		user := database.User{
 			Username: c.FormValue("username"),
 			Email:    c.FormValue("email"),
 			Password: middleware.HashPassword(c.FormValue("password")),
 		}
+
 		database.Database.Create(&user)
 		return c.SendString("Registred")
 
