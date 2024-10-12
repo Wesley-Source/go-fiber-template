@@ -12,7 +12,6 @@ func Index(c *fiber.Ctx) error {
 	return c.Render("hello", fiber.Map{
 		"Title": os.Getenv("TITLE"),
 	}, "layouts/main")
-
 }
 
 func LoginPost(c *fiber.Ctx) error {
