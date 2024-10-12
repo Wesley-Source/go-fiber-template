@@ -98,3 +98,7 @@ func SetSessionCookie(c *fiber.Ctx, id uint) {
 	session.Set("user_id", id)
 	session.Save()
 }
+
+func ClearSessionCookie(c *fiber.Ctx) {
+	c.ClearCookie("user_id")
+}

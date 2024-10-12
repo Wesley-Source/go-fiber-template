@@ -64,3 +64,8 @@ func RegisterGet(c *fiber.Ctx) error {
 		"Title": os.Getenv("TITLE"),
 	}, "layouts/main")
 }
+
+func LogoutPost(c *fiber.Ctx) error {
+	middleware.ClearSessionCookie(c)
+	return c.SendStatus(fiber.StatusOK)
+}
