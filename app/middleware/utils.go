@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"log"
+	"os"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,6 +13,22 @@ import (
 )
 
 var Session *session.Store
+
+func Render(c *fiber.Ctx, view string) error {
+	return c.Render(view, fiber.Map{
+		"Title":  os.Getenv("TITLE"),
+		"UserID": GetSessionCookie(c),
+	}, "layouts/main")
+}
+
+func Redirect(c *fiber.Ctx, view, route string) error {
+	if c.Get("HX-Request") == "true" {
+		c.Set("HX-Redirect", route)
+		return c.SendStatus(fiber.StatusOK)
+	}
+
+	return Render(c, view)
+}
 
 func ConnectSessionsDB() {
 	storage := sqlite3.New(sqlite3.Config{
@@ -61,12 +78,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 
 		// Redirects the user to the index page if they're already logged in
 		if userID != nil {
-			if c.Get("HX-Request") == "true" {
-				c.Set("HX-Redirect", "/") // Overrides the HX-Swap, redirecting the page instead of appending
-				return c.SendStatus(fiber.StatusOK)
-			} else {
-				return c.Redirect("/")
-			}
+			return Redirect(c, "index", "/")
 		} else {
 			return c.Next()
 		}
@@ -74,12 +86,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 
 	// if the user is not
 	if userID == nil {
-		if c.Get("HX-Request") == "true" {
-			c.Set("HX-Redirect", "/") // Overrides the HX-Swap, redirecting the page instead of appending
-			return c.SendStatus(fiber.StatusOK)
-		} else {
-			return c.Redirect("/")
-		}
+		return Redirect(c, "index", "/")
 	}
 
 	sess.Save()
@@ -97,6 +104,15 @@ func SetSessionCookie(c *fiber.Ctx, id uint) {
 	// Saves the user_id as a cookie in the user's browser
 	session.Set("user_id", id)
 	session.Save()
+}
+
+func GetSessionCookie(c *fiber.Ctx) interface{} {
+	session, err := Session.Get(c)
+	if err != nil {
+		log.Println("Failed to get session.")
+	}
+
+	return session.Get("user_id")
 }
 
 func ClearSessionCookie(c *fiber.Ctx) {

@@ -3,15 +3,12 @@ package routes
 import (
 	"go-fiber-template/app/middleware"
 	"go-fiber-template/config/database"
-	"os"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func Index(c *fiber.Ctx) error {
-	return c.Render("hello", fiber.Map{
-		"Title": os.Getenv("TITLE"),
-	}, "layouts/main")
+	return middleware.Redirect(c, "index", "/")
 }
 
 func LoginPost(c *fiber.Ctx) error {
@@ -23,21 +20,20 @@ func LoginPost(c *fiber.Ctx) error {
 
 	user := database.SearchUserByString(email, "email")
 
+	// Check if the password matches the password hash
 	if middleware.ValidatePassword(user.Password, c.FormValue("password")) {
 		middleware.SetSessionCookie(c, user.ID)
 
-		c.Set("HX-Redirect", "/")
-		return c.SendStatus(fiber.StatusOK)
+		return middleware.Redirect(c, "index", "/")
 
-	} else {
-		return c.SendString("Wrong password")
 	}
+
+	return c.SendString("Wrong password")
+
 }
 
 func LoginGet(c *fiber.Ctx) error {
-	return c.Render("login", fiber.Map{
-		"Title": os.Getenv("TITLE"),
-	}, "layouts/main")
+	return middleware.Redirect(c, "login", "/login")
 }
 
 func RegisterPost(c *fiber.Ctx) error {
@@ -59,9 +55,7 @@ func RegisterPost(c *fiber.Ctx) error {
 }
 
 func RegisterGet(c *fiber.Ctx) error {
-	return c.Render("register", fiber.Map{
-		"Title": os.Getenv("TITLE"),
-	}, "layouts/main")
+	return middleware.Redirect(c, "register", "/register")
 }
 
 func LogoutPost(c *fiber.Ctx) error {
