@@ -7,6 +7,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+func convertUser(user database.User) map[string]interface{} {
+	return map[string]interface{}{
+		"ID":       user.ID,
+		"Username": user.Username,
+		"Email":    user.Email,
+	}
+}
+
 func Index(c *fiber.Ctx) error {
 	return middleware.Redirect(c, "index", "/")
 }
