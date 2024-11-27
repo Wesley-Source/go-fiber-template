@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 	"time"
+	"todo-app/config/database"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
@@ -15,10 +16,20 @@ import (
 var Session *session.Store
 
 func Render(c *fiber.Ctx, view string) error {
-	return c.Render(view, fiber.Map{
+	userID := GetSessionCookie(c)
+	data := fiber.Map{
 		"Title":  os.Getenv("TITLE"),
-		"UserID": GetSessionCookie(c),
-	}, "layouts/main")
+		"UserID": userID,
+	}
+
+	if userID != nil {
+		// If the user is logged in, fetch their information
+		user := database.SearchUserById(userID.(uint))
+		data["Username"] = user.Username
+		data["Email"] = user.Email
+	}
+
+	return c.Render(view, data, "layouts/main")
 }
 
 func Redirect(c *fiber.Ctx, view, route string) error {
@@ -62,8 +73,8 @@ func ValidatePassword(hashedPassword string, password string) bool {
 
 func AuthMiddleware(c *fiber.Ctx) error {
 	/*
-		Prevents the logged user to access the login and register pages
-		and prevents the no logged user to access protected pages
+		Prevents the logged user from accessing the login and register pages
+		and prevents non-logged users from accessing protected pages
 	*/
 	sess, err := Session.Get(c)
 	if err != nil {
@@ -73,7 +84,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	userID := sess.Get("user_id")
 	switch c.Path() {
 
-	// If the user is logged redirect him to the index page instead of /login or /register
+	// If the user is logged in, redirect them to the index page instead of /login or /register
 	case "/login", "/register":
 
 		// Redirects the user to the index page if they're already logged in
@@ -84,7 +95,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 		}
 	}
 
-	// if the user is not
+	// If the user is not logged in
 	if userID == nil {
 		return Redirect(c, "index", "/")
 	}
@@ -116,5 +127,12 @@ func GetSessionCookie(c *fiber.Ctx) interface{} {
 }
 
 func ClearSessionCookie(c *fiber.Ctx) {
+	session, err := Session.Get(c)
+	if err != nil {
+		log.Println("Failed to get session.")
+	} else {
+		session.Delete("user_id")
+		session.Save()
+	}
 	c.ClearCookie("user_id")
 }

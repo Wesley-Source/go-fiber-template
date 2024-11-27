@@ -13,6 +13,24 @@ type User struct {
 	Username string `gorm:"unique" json:"username"`
 	Email    string `gorm:"unique" json:"email"`
 	Password string `json:"password"`
+	Lists    []List
+}
+
+type List struct {
+	gorm.Model
+	Name   string `json:"name"`
+	UserID uint
+	Tasks  []Task
+}
+
+type Task struct {
+	gorm.Model
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Priority    string `json:"priority"`
+	DueDate     string `json:"due_date"`
+	Completed   bool   `json:"completed" gorm:"default:false"`
+	ListID      uint
 }
 
 var Database *gorm.DB
@@ -22,7 +40,7 @@ func ConnectDatabase() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	db.AutoMigrate(&User{}) // Include models as you create them
+	db.AutoMigrate(&User{}, &List{}, &Task{}) // Include models as you create them
 
 	Database = db // Moving the variable to the global scope
 }

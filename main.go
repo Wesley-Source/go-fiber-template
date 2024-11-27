@@ -1,11 +1,11 @@
 package main
 
 import (
-	"go-fiber-template/app/middleware"
-	"go-fiber-template/app/routes"
-	"go-fiber-template/config/database"
 	"log"
 	"os"
+	"todo-app/app/middleware"
+	"todo-app/app/routes"
+	"todo-app/config/database"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
@@ -13,12 +13,11 @@ import (
 )
 
 func main() {
-
-	// Initializing and connecting to the databases
+	// Initialize and connect to the databases
 	database.ConnectDatabase()
 	middleware.ConnectSessionsDB()
 
-	// Loading the global variables
+	// Load environment variables
 	err := godotenv.Load("./config/.env")
 	if err != nil {
 		log.Fatalln(err)
@@ -30,10 +29,10 @@ func main() {
 		Views: engine,
 	})
 
-	// Here is where you want to put your icons, scripts, thumbnails etc
+	// Static files directory for icons, scripts, thumbnails etc.
 	app.Static("/", "./app/public")
 
-	// Routes:
+	// Routes configuration
 	app.Get("/", routes.Index)
 
 	app.Get("/login", middleware.AuthMiddleware, routes.LoginGet)
@@ -41,6 +40,15 @@ func main() {
 
 	app.Post("/register", middleware.AuthMiddleware, routes.RegisterPost)
 	app.Get("/register", middleware.AuthMiddleware, routes.RegisterGet)
+
+	app.Get("/logout", middleware.AuthMiddleware, routes.LogoutGet)
+	app.Get("/todo", middleware.AuthMiddleware, routes.TodoGet)
+
+	app.Post("/add_list", middleware.AuthMiddleware, routes.AddListPost)
+	// app.Post("/add_task", middleware.AuthMiddleware, routes.AddTaskPost)
+
+	// app.Post("/delete_list", middleware.AuthMiddleware, routes.DeleteListPost)
+	// app.Post("/delete_task", middleware.AuthMiddleware, routes.DeleteTaskPost)
 
 	log.Fatalln(app.Listen(os.Getenv("PORT")))
 }
