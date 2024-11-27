@@ -43,12 +43,15 @@ func main() {
 	app.Get("/register", middleware.AuthMiddleware, routes.RegisterGet)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	app.Get("/logout", middleware.AuthMiddleware, routes.LogoutGet)
 	app.Get("/todo", middleware.AuthMiddleware, routes.TodoGet)
 
 	app.Post("/list_add", middleware.AuthMiddleware, routes.ListAddPost)
 	app.Post("/task_add", middleware.AuthMiddleware, routes.TaskAddPost)
 
+=======
+>>>>>>> parent of 696f3ff (todo-app)
 =======
 >>>>>>> parent of 696f3ff (todo-app)
 	log.Fatalln(app.Listen(os.Getenv("PORT")))

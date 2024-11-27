@@ -2,9 +2,14 @@ package routes
 
 import (
 <<<<<<< HEAD
+<<<<<<< HEAD
 	"strconv"
 	"todo-app/app/middleware"
 	"todo-app/config/database"
+=======
+	"go-fiber-template/app/middleware"
+	"go-fiber-template/config/database"
+>>>>>>> parent of 696f3ff (todo-app)
 =======
 	"go-fiber-template/app/middleware"
 	"go-fiber-template/config/database"
@@ -75,6 +80,7 @@ func RegisterGet(c *fiber.Ctx) error {
 func LogoutPost(c *fiber.Ctx) error {
 	middleware.ClearSessionCookie(c)
 <<<<<<< HEAD
+<<<<<<< HEAD
 	return middleware.Redirect(c, "index", "/")
 }
 
@@ -111,6 +117,9 @@ func TaskAddPost(c *fiber.Ctx) error {
 
 	database.Database.Create(&task)
 	return c.SendString("Task created")
+=======
+	return c.SendStatus(fiber.StatusOK)
+>>>>>>> parent of 696f3ff (todo-app)
 =======
 	return c.SendStatus(fiber.StatusOK)
 >>>>>>> parent of 696f3ff (todo-app)

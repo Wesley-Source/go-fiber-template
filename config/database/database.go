@@ -14,6 +14,7 @@ type User struct {
 	Email    string `gorm:"unique" json:"email"`
 	Password string `json:"password"`
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Lists    []List
 }
 
@@ -31,6 +32,8 @@ type Task struct {
 	DueDate     string `json:"due_date"`
 	Completed   bool   `json:"completed" gorm:"default:false"`
 	ListID      uint
+=======
+>>>>>>> parent of 696f3ff (todo-app)
 =======
 >>>>>>> parent of 696f3ff (todo-app)
 }

@@ -15,6 +15,7 @@ import (
 var Session *session.Store
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 func listConverter(list database.List) map[string]interface{} {
 	return map[string]interface{}{
 		"ID":    list.ID,
@@ -49,6 +50,13 @@ func Render(c *fiber.Ctx, view string, partial ...bool) error {
 	}
 
 	return c.Render(view, data, "layouts/main")
+=======
+func Render(c *fiber.Ctx, view string) error {
+	return c.Render(view, fiber.Map{
+		"Title":  os.Getenv("TITLE"),
+		"UserID": GetSessionCookie(c),
+	}, "layouts/main")
+>>>>>>> parent of 696f3ff (todo-app)
 =======
 func Render(c *fiber.Ctx, view string) error {
 	return c.Render(view, fiber.Map{
