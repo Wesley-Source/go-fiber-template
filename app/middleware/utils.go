@@ -15,7 +15,15 @@ import (
 
 var Session *session.Store
 
-func Render(c *fiber.Ctx, view string) error {
+func listConverter(list database.List) map[string]interface{} {
+	return map[string]interface{}{
+		"ID":    list.ID,
+		"Title": list.Title,
+		"Tasks": database.SearchTasksByListID(list.ID),
+	}
+}
+
+func Render(c *fiber.Ctx, view string, partial ...bool) error {
 	userID := GetSessionCookie(c)
 	data := fiber.Map{
 		"Title":  os.Getenv("TITLE"),
@@ -25,8 +33,19 @@ func Render(c *fiber.Ctx, view string) error {
 	if userID != nil {
 		// If the user is logged in, fetch their information
 		user := database.SearchUserById(userID.(uint))
+
+		var lists []map[string]interface{}
+		for _, list := range database.SearchListsByUserID(userID.(uint)) {
+			lists = append(lists, listConverter(list))
+		}
+
 		data["Username"] = user.Username
 		data["Email"] = user.Email
+		data["Lists"] = lists
+	}
+
+	if len(partial) > 0 && partial[0] == true {
+		return c.Render(view, data)
 	}
 
 	return c.Render(view, data, "layouts/main")
@@ -48,7 +67,7 @@ func ConnectSessionsDB() {
 	})
 	Session = session.New(session.Config{
 		Storage:        storage,
-		Expiration:     30 * time.Minute,
+		Expiration:     24 * time.Hour,
 		KeyLookup:      "cookie:session_id",
 		CookieSecure:   true,
 		CookieHTTPOnly: true,

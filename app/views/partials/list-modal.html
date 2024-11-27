@@ -2,23 +2,18 @@
 <div class="modal" :class="{ 'is-active': isListModalOpen }">
     <div class="modal-background" @click="isListModalOpen = false"></div>
     <div class="modal-card">
-        <header class="modal-card-head has-background-black-ter">
-            <p class="modal-card-title has-text-white">New List</p>
-            <button class="delete" aria-label="close" @click="isListModalOpen = false"></button>
-        </header>
-        <form hx-post="/add_list" @submit="isListModalOpen = false">
-            <section class="modal-card-body has-background-black-bis">
-                <div class="field">
-                    <label class="label has-text-white">List Name</label>
-                    <div class="control">
-                        <input class="input has-background-black-ter has-text-white" type="text" name="list-name" placeholder="Enter list name" required>
-                    </div>
+        <form hx-post="/list_add" hx-target="#lists-list" @submit.prevent="isListModalOpen = false">
+            <div class="field">
+                <label for="list_title" class="label">List Title</label>
+                <div class="control">
+                    <input class="input" type="text" name="list_title" id="list_title" placeholder="List title">
                 </div>
-            </section>
-            <footer class="modal-card-foot has-background-black-ter">
-                <button type="submit" class="button is-info">Save List</button>
-                <button type="button" class="button" @click="isListModalOpen = false">Cancel</button>
-            </footer>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button type="submit" class="button is-info is-fullwidth">Add List</button>
+                </div>
+            </div>
         </form>
     </div>
 </div>

@@ -2,45 +2,25 @@
 <div class="modal" :class="{ 'is-active': isTaskModalOpen }">
     <div class="modal-background" @click="isTaskModalOpen = false"></div>
     <div class="modal-card">
-        <header class="modal-card-head has-background-black-ter">
-            <p class="modal-card-title has-text-white">New Task</p>
-            <button class="delete" aria-label="close" @click="isTaskModalOpen = false"></button>
-        </header>
-        <section class="modal-card-body has-background-black-bis">
+        <form hx-post="/task_add" @submit.prevent="isTaskModalOpen = false">
             <div class="field">
-                <label class="label has-text-white">Title</label>
+                <label for="task_title" class="label has-text-white">Task Title</label>
                 <div class="control">
-                    <input class="input has-background-black-ter has-text-white" type="text" placeholder="Task title">
+                    <input class="input has-background-black-ter has-text-white" type="text" name="task_title" id="task_title" placeholder="Task title">
                 </div>
             </div>
             <div class="field">
-                <label class="label has-text-white">Description</label>
+                <label for="task_description" class="label has-text-white">Description</label>
                 <div class="control">
-                    <textarea class="textarea has-background-black-ter has-text-white" placeholder="Task description"></textarea>
+                    <textarea class="textarea has-background-black-ter has-text-white" name="task_description" id="task_description" placeholder="Task description"></textarea>
                 </div>
             </div>
+            <input type="hidden" name="list_id" :value="activeList">
             <div class="field">
-                <label class="label has-text-white">Priority</label>
                 <div class="control">
-                    <div class="select">
-                        <select>
-                            <option>Low</option>
-                            <option>Medium</option>
-                            <option>High</option>
-                        </select>
-                    </div>
+                    <button type="submit" class="button is-info is-fullwidth">Add Task</button>
                 </div>
             </div>
-            <div class="field">
-                <label class="label has-text-white">Due Date</label>
-                <div class="control">
-                    <input class="input has-background-black-ter has-text-white" type="date">
-                </div>
-            </div>
-        </section>
-        <footer class="modal-card-foot has-background-black-ter">
-            <button class="button is-info">Save Task</button>
-            <button class="button" @click="isTaskModalOpen = false">Cancel</button>
-        </footer>
+        </form>
     </div>
 </div>

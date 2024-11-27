@@ -18,7 +18,7 @@ type User struct {
 
 type List struct {
 	gorm.Model
-	Name   string `json:"name"`
+	Title  string `json:"title"`
 	UserID uint
 	Tasks  []Task
 }
@@ -27,7 +27,6 @@ type Task struct {
 	gorm.Model
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	Priority    string `json:"priority"`
 	DueDate     string `json:"due_date"`
 	Completed   bool   `json:"completed" gorm:"default:false"`
 	ListID      uint
@@ -70,4 +69,22 @@ func SearchUserById(id uint) User {
 
 	Database.Where("id = ?", id).First(&user)
 	return user
+}
+
+func SearchListsByUserID(userID uint) []List {
+	// Search lists by user's ID
+
+	var lists []List
+
+	Database.Where("user_id = ?", userID).Find(&lists)
+	return lists
+}
+
+func SearchTasksByListID(listID uint) []Task {
+	// Search tasks by list's ID
+
+	var tasks []Task
+
+	Database.Where("list_id = ?", listID).Find(&tasks)
+	return tasks
 }

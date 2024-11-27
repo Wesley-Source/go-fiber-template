@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"strconv"
 	"todo-app/app/middleware"
 	"todo-app/config/database"
 
@@ -69,17 +70,33 @@ func TodoGet(c *fiber.Ctx) error {
 	return middleware.Redirect(c, "todo", "/todo")
 }
 
-func AddListPost(c *fiber.Ctx) error {
+func ListAddPost(c *fiber.Ctx) error {
 	list := database.List{
-		Name:   c.FormValue("list-name"), // Mudando para "list-name" para corresponder ao frontend
+		Title:  c.FormValue("list_title"),
 		UserID: c.Locals("user_id").(uint),
 	}
+
 	database.Database.Create(&list)
-	return c.SendString("List created")
+	// Quando for uma requisição HTMX, use RenderPartial
+	return middleware.Render(c, "partials/menus-list", true)
 }
 
-func RemoveListPost(c *fiber.Ctx) error {
-	listID := c.FormValue("list_id")
-	database.Database.Where("id = ?", listID).Delete(&database.List{})
-	return c.SendString("List removed")
+func TaskAddPost(c *fiber.Ctx) error {
+	listID, err := strconv.ParseUint(c.FormValue("list_id"), 10, 32)
+	if err != nil {
+		return c.Status(400).SendString("Invalid list ID")
+	}
+
+	task := database.Task{
+		Title:       c.FormValue("task_title"),
+		Description: c.FormValue("task_description"),
+		DueDate:     c.FormValue("task_date"),
+		Completed:   false,
+		ListID:      uint(listID),
+	}
+
+	// todo, task e lista direito, tem coisas erradas
+
+	database.Database.Create(&task)
+	return c.SendString("Task created")
 }
